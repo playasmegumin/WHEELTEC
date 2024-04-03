@@ -1,0 +1,3 @@
+../WHEELTEC/DataScope_DP.c:36:6:Float2Byte	0	static
+../WHEELTEC/DataScope_DP.c:53:6:DataScope_Get_Channel_Data	16	static
+../WHEELTEC/DataScope_DP.c:81:15:DataScope_Data_Generate	0	static

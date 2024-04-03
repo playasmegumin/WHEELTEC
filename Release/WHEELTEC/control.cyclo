@@ -1,0 +1,14 @@
+../WHEELTEC/control.c:78:5:Balance	1
+../WHEELTEC/control.c:137:5:Turn	5
+../WHEELTEC/control.c:160:6:Set_Pwm	3
+../WHEELTEC/control.c:177:5:PWM_Limit	1
+../WHEELTEC/control.c:192:6:Key	4
+../WHEELTEC/control.c:218:4:Turn_Off	5
+../WHEELTEC/control.c:97:5:Velocity	21
+../WHEELTEC/control.c:242:6:Get_Angle	4
+../WHEELTEC/control.c:292:5:myabs	1
+../WHEELTEC/control.c:307:5:Pick_Up	12
+../WHEELTEC/control.c:344:5:Put_Down	10
+../WHEELTEC/control.c:377:6:Get_Velocity_Form_Encoder	1
+../WHEELTEC/control.c:393:6:Choose	8
+../WHEELTEC/control.c:19:6:HAL_GPIO_EXTI_Callback	13

@@ -1,0 +1,4 @@
+../BSPcode/bsp_adc.c:63:10:Get_Adc_Channel	0	static
+../BSPcode/bsp_adc.c:10:10:Get_Adc	24	static
+../BSPcode/bsp_adc.c:37:10:Get_Adc_Average	24	static
+../BSPcode/bsp_adc.c:54:5:Get_battery_volt	8	static

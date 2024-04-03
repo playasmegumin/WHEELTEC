@@ -1,0 +1,3 @@
+../WHEELTEC/ReadDistance.c:21:6:Read_Distane	8	static
+../WHEELTEC/ReadDistance.c:46:6:HAL_TIM_IC_CaptureCallback	16	static
+../WHEELTEC/ReadDistance.c:89:6:HAL_TIM_PeriodElapsedCallback	0	static
