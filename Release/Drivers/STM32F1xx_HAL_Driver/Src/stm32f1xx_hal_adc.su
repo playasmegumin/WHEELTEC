@@ -24,4 +24,4 @@
 ../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_adc.c:639:19:HAL_ADC_DeInit	16	static
 ../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_adc.c:1159:19:HAL_ADC_Stop	8	static
 ../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_adc.c:1506:19:HAL_ADC_Stop_IT	8	static
-../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_adc.c:1704:19:HAL_ADC_Stop_DMA	8	static
+../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_adc.c:1704:19:HAL_ADC_Stop_DMA	16	static

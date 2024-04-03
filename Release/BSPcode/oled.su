@@ -3,10 +3,10 @@
 ../BSPcode/oled.c:80:6:OLED_Display_On	8	static
 ../BSPcode/oled.c:94:6:OLED_Display_Off	8	static
 ../BSPcode/oled.c:108:6:OLED_Clear	4	static
-../BSPcode/oled.c:122:6:OLED_DrawPoint	12	static
+../BSPcode/oled.c:122:6:OLED_DrawPoint	8	static
 ../BSPcode/oled.c:140:6:OLED_ShowChar	48	static
 ../BSPcode/oled.c:172:5:oled_pow	0	static
-../BSPcode/oled.c:187:6:OLED_ShowNumber	56	static
+../BSPcode/oled.c:187:6:OLED_ShowNumber	64	static
 ../BSPcode/oled.c:214:6:OLED_ShowString	32	static
 ../BSPcode/oled.c:235:6:OLED_Init	8	static
 ../BSPcode/oled.c:312:6:OLED_Set_Pos	8	static

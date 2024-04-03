@@ -16,28 +16,28 @@ Output  : none
 ***诓*********锟�
 ******  值******
 **************************************************************************/
-void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) // 用于处理外部中断的回调函数
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) // 用于处理来自MPU6050的时钟中断，这里是实际上的主函数
 {
 	static int Voltage_Temp,Voltage_Count,Voltage_All;
-	static u8 Flag_Target;											// 10ms 这个Target每次中断都要跳一下，不明白
+	static u8 Flag_Target;											// 这个Flag_Target扮演一个1位计数器的角色
 	int Encoder_Left,Encoder_Right;
 	int Balance_Pwm,Velocity_Pwm,Turn_Pwm;
-	if(GPIO_Pin==MPU6050_INT_Pin)									// 因为下面那个Flag_Target我现在怀疑这个中断指的是按钮中断
+	if(GPIO_Pin==MPU6050_INT_Pin)									// 这里避免非时钟中断触发这里的逻辑
 	{
-		Flag_Target=!Flag_Target;									// Flag_target跳了，为啥呢
-		Get_Angle(Way_Angle);                     					// 5ms
+		Flag_Target=!Flag_Target;									// Flag_target翻转，其实是对时钟做了一个二分时
+		Get_Angle(Way_Angle);                     					// 这里是采用Way_Angle指定的方式进行角度解算，这里写死了Way_Angle==2用卡尔曼滤波
 		Encoder_Left=-Read_Encoder(2);								// 这里的2和4指的是不同通道，编码器的数据包含TIM2/3/4，TIM3是超声波编码器
-		Encoder_Right=-Read_Encoder(4);
+		Encoder_Right=-Read_Encoder(4);								// 关于TIM等每个信号的含义参见开发手册的4.1节
 
-		Get_Velocity_Form_Encoder(Encoder_Left,Encoder_Right);		// 单位mm/s；把数值读到Velocity_left里面去了，这是全局变量？
+		Get_Velocity_Form_Encoder(Encoder_Left,Encoder_Right);		// 单位mm/s；把数值读到Velocity_left里面去了，这个是全局变量
 
 		//--------------------------------------------------------
 		if(delay_flag==1)											// delay_flag为正的时候主循环会卡住
 		{
-			if(++delay_50==10)	 delay_50=0,delay_flag=0;  			// 我猜每次时钟中断的间隔是5ms，因此这里一次delay是50ms（计数10次）
+			if(++delay_50==10)	 delay_50=0,delay_flag=0;  			// 时钟中断的间隔是5ms，因此这里一次delay是50ms（delay_50计数10次）
 		}
 		//--------------------------------------------------------
-		if(Flag_Target==1)                        					// 所以这里一次执行间隔10ms（利用了Flag_Target翻转计数，翻两次运行一次）
+		if(Flag_Target==1)                        					// 每次Flag_Target为1的时候触发，所以这段逻辑触发的间隔是10ms
 		{
 			Voltage_Temp=Get_battery_volt();
 			Voltage_Count++;
@@ -47,12 +47,12 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) // 用于处理外部中断的回
 			return;
 		}
 
-
+		// 下面的逻辑是Flag_Target==0时触发的，这是个二选一的并列关系
 		Read_Distane();
 		if(Flag_follow==0&&Flag_avoid==0)	Led_Flash(100);			// 没搞出来LED灯还有什么玄妙之处
 		if(Flag_follow==1||Flag_avoid==1)	Led_Flash(0);
 
-		// 做个按键检测，主要是检测功能键（就是按了会停止平衡状态那个）
+		// 做个按键检测，主要是检测功能键的状态（就是按了会停止平衡状态那个）
 		Key();
 
 		// 平衡环、速度环、转向环全部触发一遍
@@ -81,51 +81,51 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) // 用于处理外部中断的回
 
 /**************************************************************************
 Function: Vertical PD control
-Input   : Angle:angle***Gyro***angular velocity
-Output  : balance***Vertical control PWM
-*********锟杰ｏ拷直***PD******
-***诓******锟紸ngle:锟角度ｏ拷Gyro******锟劫讹拷
-******  值***balance***直*********PWM
+Input   : Angle是角度；Gyro是角速度
+Output  : balance所需要的Vertical control PWM数值
+
+PD控制器，用于控制直立环平衡。倾角决定此时此刻车轮需要的加速度。
 **************************************************************************/
 int Balance(float Angle,float Gyro)
 {
    float Angle_bias,Gyro_bias;
 	 int balance;
-	 Angle_bias=Middle_angle-Angle;                       				//***锟狡斤拷锟侥角讹拷***值 锟酵伙拷械***锟�
+	 Angle_bias=Middle_angle-Angle;
 	 Gyro_bias=0-Gyro;
-	 balance=-Balance_Kp/100*Angle_bias-Gyro_bias*Balance_Kd/100; //******平******频牡***PWM  PD******   kp***P系*** kd***D系***
-	 return balance;
+	 balance=-Balance_Kp/100*Angle_bias-Gyro_bias*Balance_Kd/100; 	// 直立环；搜索一下Balance_Kd在main.c中的声明可以看到初始PID数值
+	 return balance;												// 这几个Kp/Ki/Kd都会被来自串口（蓝牙）的数据更新
 }
 
 /**************************************************************************
 Function: Speed PI control
-Input   : encoder_left***Left wheel encoder reading***encoder_right***Right wheel encoder reading
+Input   : encoder_left即Left wheel encoder reading；encoder_right即Right wheel encoder reading
 Output  : Speed control PWM
-*********锟杰ｏ拷锟劫度匡拷***PWM
-***诓******锟絜ncoder_left******锟街憋拷***************encoder_right******锟街憋拷************
-******  值***锟劫度匡拷***PWM
+
+PI控制器实现的速度环；输出速度环需要的PWM数值。
+最好笑的一集，control.c所有的注释从商家手里出来的时候就已经烂掉了，无法恢复。这一部分的相关注释参照开发手册的4.3节。
 **************************************************************************/
-//锟睫革拷前*********锟劫度ｏ拷***锟睫革拷Target_Velocity******锟界，锟侥筹拷60锟酵比斤拷******
 int Velocity(int encoder_left,int encoder_right)
 {
     static float velocity,Encoder_Least,Encoder_bias,Movement;
 	static float Encoder_Integral,Target_Velocity;
-	//================遥***前******锟剿诧拷***====================//
-	if(Flag_follow==1||Flag_avoid==1) Target_Velocity = 30; //***************/******模式,******锟劫讹拷
-	else 											        Target_Velocity = 50;
-	if(Flag_front==1)    	Movement=Target_Velocity/Flag_velocity;	  //锟秸碉拷前***锟脚猴拷
-	else if(Flag_back==1)	Movement=-Target_Velocity/Flag_velocity;  //锟秸碉拷******锟脚猴拷
-	else  Movement=0;
 
-	//=============************锟杰ｏ拷******/***锟较ｏ拷==================//
-	if(Flag_follow==1&&(Distance>200&&Distance<500)&&Flag_Left!=1&&Flag_Right!=1) //******
+	//================这是蓝牙遥控部分，开发手册里没有，看半天没看出来，有一说一很想删了这部分====================//
+	if(Flag_follow==1||Flag_avoid==1) 		Target_Velocity = 30;
+	else 									Target_Velocity = 50;
+
+	if(Flag_front==1)    					Movement = Target_Velocity/Flag_velocity;
+	else if(Flag_back==1)					Movement = -Target_Velocity/Flag_velocity;
+	else  									Movement = 0;
+
+	//=============我猜是避障和跟随模式==================//
+	if(Flag_follow==1&&(Distance>200&&Distance<500)&&Flag_Left!=1&&Flag_Right!=1)
 		Movement=Target_Velocity/Flag_velocity;
 	if(Flag_follow==1&&Distance<200&&Flag_Left!=1&&Flag_Right!=1)
 		Movement=-Target_Velocity/Flag_velocity;
-	if(Flag_avoid==1&&Distance<450&&Flag_Left!=1&&Flag_Right!=1)  //***************
+	if(Flag_avoid==1&&Distance<450&&Flag_Left!=1&&Flag_Right!=1)
 		Movement=-Target_Velocity/Flag_velocity;
 
-	//================锟劫讹拷PI*********=====================//
+	//================这部分就是纯血的速度环PI控制器了=====================//
 	Encoder_Least =0-(encoder_left+encoder_right);                    //***取******锟劫讹拷偏***=目***锟劫度ｏ拷锟剿达拷为锟姐）-******锟劫度ｏ拷***锟揭憋拷******之锟酵ｏ拷
 	Encoder_bias *= 0.84;		                                          //一锟阶碉拷通锟剿诧拷***
 	Encoder_bias += Encoder_Least*0.16;	                              //一锟阶碉拷通锟剿诧拷************锟劫度变化
@@ -406,23 +406,32 @@ void Choose(int encoder_left,int encoder_right)
 	static int count;
 	if(Flag_Stop==0)
 		count = 0;
-	if((Flag_Stop==1)&&(encoder_left<10))	//***时停止******锟街诧拷***
+	if((Flag_Stop==1)&&(encoder_left<10))		// 这个函数每次中断都会被执行，因此Flag赋值必须写全
 	{
 		count += myabs(encoder_right);
-		if(count>6&&count<180)	//***通模式
+		if(count>6&&count<135)		// 普通模式
 		{
 			Flag_follow = 0;
 			Flag_avoid = 0;
+			Flag_swing = 0;
 		}
-		if(count>180&&count<360)	//******模式
+		if(count>135&&count<270)	// 避障模式
 		{
 			Flag_avoid = 1;
 			Flag_follow = 0;
+			Flag_swing = 0;
 		}
-		if(count>360&&count<540)	//******模式
+		if(count>270&&count<405)	// 跟随模式
 		{
 			Flag_avoid = 0;
 			Flag_follow = 1;
+			Flag_swing = 0;
+		}
+		if(count>405&&count<540)	// 摇摆模式
+		{
+			Flag_avoid = 0;
+			Flag_follow = 0;
+			Flag_swing = 1;
 		}
 		if(count>540)
 			count = 0;

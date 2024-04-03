@@ -1,6 +1,6 @@
 ################################################################################
-# Automatically-generated file. Do not edit!
-# Toolchain: GNU Tools for STM32 (10.3-2021.10)
+# 自动生成的文件。不要编辑！
+# Toolchain: GNU Tools for STM32 (12.3.rel1)
 ################################################################################
 
 -include ../makefile.init
@@ -58,34 +58,34 @@ OBJCOPY_HEX += \
 WHEELTEC.hex \
 
 
-# All Target
+# 所有目标
 all: main-build
 
-# Main-build Target
+# 主构建目标
 main-build: WHEELTEC.elf secondary-outputs
 
-# Tool invocations
-WHEELTEC.elf WHEELTEC.map: $(OBJS) $(USER_OBJS) C:\WHEELTEC\STM32F103C8TX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "WHEELTEC.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m3 -T"C:\WHEELTEC\STM32F103C8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="WHEELTEC.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
-	@echo 'Finished building target: $@'
+# 工具调用
+WHEELTEC.elf WHEELTEC.map: $(OBJS) $(USER_OBJS) E:\workspace\ucas\2023-2024-2\WHEELTEC\STM32F103C8TX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "WHEELTEC.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m3 -T"E:\workspace\ucas\2023-2024-2\WHEELTEC\STM32F103C8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="WHEELTEC.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+	@echo '已结束构建目标： $@'
 	@echo ' '
 
 default.size.stdout: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
 	arm-none-eabi-size  $(EXECUTABLES)
-	@echo 'Finished building: $@'
+	@echo '已结束构建： $@'
 	@echo ' '
 
 WHEELTEC.list: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
 	arm-none-eabi-objdump -h -S $(EXECUTABLES) > "WHEELTEC.list"
-	@echo 'Finished building: $@'
+	@echo '已结束构建： $@'
 	@echo ' '
 
 WHEELTEC.hex: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
 	arm-none-eabi-objcopy  -O ihex $(EXECUTABLES) "WHEELTEC.hex"
-	@echo 'Finished building: $@'
+	@echo '已结束构建： $@'
 	@echo ' '
 
-# Other Targets
+# 其他目标
 clean:
 	-$(RM) WHEELTEC.elf WHEELTEC.hex WHEELTEC.list WHEELTEC.map default.size.stdout
 	-@echo ' '
