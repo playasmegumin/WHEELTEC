@@ -84,6 +84,9 @@ extern u8 PID_Send;
 extern float Acceleration_Z;                       //Z轴加速度计
 extern float Balance_Kp,Balance_Kd,Velocity_Kp,Velocity_Ki,Turn_Kp,Turn_Kd;
 extern float Velocity_Left,Velocity_Right;	//车轮速度(mm/s)
+//外部声明当前速度
+extern u8 sin100_counter;
+extern float sin100[100];
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
