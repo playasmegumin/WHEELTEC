@@ -110,31 +110,36 @@ int Velocity(int encoder_left,int encoder_right)
 	static float Encoder_Integral,Target_Velocity;
 
 	//================这是蓝牙遥控部分，开发手册里没有，看半天没看出来，有一说一很想删了这部分====================//
-	if(Flag_follow==1||Flag_avoid==1) 		Target_Velocity = 30;
-	else 									Target_Velocity = 50;
+	if(Flag_follow==1||Flag_avoid==1) 		Target_Velocity = 30;	// 这里是避障和跟随模式下的目标速度
+	else 									Target_Velocity = 50;	// 如果是普通模式的话会减速
 
 	if(Flag_front==1)    					Movement = Target_Velocity/Flag_velocity;
 	else if(Flag_back==1)					Movement = -Target_Velocity/Flag_velocity;
 	else  									Movement = 0;
 
-	//=============我猜是避障和跟随模式==================//
-	if(Flag_follow==1&&(Distance>200&&Distance<500)&&Flag_Left!=1&&Flag_Right!=1)
+	//=============我猜是避障和跟随模式所需要施加的“摄动”==================//
+	if(Flag_follow==1&&(Distance>200&&Distance<500)&&Flag_Left!=1&&Flag_Right!=1) // Flag_Left和Flag_Right是蓝牙对左右轮的控制信号
 		Movement=Target_Velocity/Flag_velocity;
-	if(Flag_follow==1&&Distance<200&&Flag_Left!=1&&Flag_Right!=1)
+	if(Flag_follow==1&&Distance<200&&Flag_Left!=1&&Flag_Right!=1)	// 这里会把距离控在Distance==200，是不是稍微有点粗糙了
 		Movement=-Target_Velocity/Flag_velocity;
-	if(Flag_avoid==1&&Distance<450&&Flag_Left!=1&&Flag_Right!=1)
+
+	if(Flag_avoid==1&&Distance<450&&Flag_Left!=1&&Flag_Right!=1)	// 前进，直到Distance<450的时候退退退
 		Movement=-Target_Velocity/Flag_velocity;
 
 	//================这部分就是纯血的速度环PI控制器了=====================//
-	Encoder_Least =0-(encoder_left+encoder_right);                    //***取******锟劫讹拷偏***=目***锟劫度ｏ拷锟剿达拷为锟姐）-******锟劫度ｏ拷***锟揭憋拷******之锟酵ｏ拷
-	Encoder_bias *= 0.84;		                                          //一锟阶碉拷通锟剿诧拷***
-	Encoder_bias += Encoder_Least*0.16;	                              //一锟阶碉拷通锟剿诧拷************锟劫度变化
-	Encoder_Integral +=Encoder_bias;                                  //***锟街筹拷位*** ******时锟戒：10ms
-	Encoder_Integral=Encoder_Integral+Movement;                       //******遥*********锟捷ｏ拷******前*********
-	if(Encoder_Integral>10000)  	Encoder_Integral=10000;             //******锟睫凤拷
-	if(Encoder_Integral<-10000)	  Encoder_Integral=-10000;            //******锟睫凤拷
-	velocity=-Encoder_bias*Velocity_Kp/100-Encoder_Integral*Velocity_Ki/100;     //锟劫度匡拷***
-	if(Turn_Off(Angle_Balance,Voltage)==1||Flag_Stop==1) Encoder_Integral=0;//******乇蘸************
+	Encoder_Least =0-(encoder_left+encoder_right);                    			// 获取最新速度偏差=目标速度-测量速度（左右编码器之和）
+	Encoder_bias *= 0.84;		                                          		// 这个Encoder_bias的数值是继承的，是真正用于计算的“速度差值”
+	Encoder_bias += Encoder_Least*0.16;											// 相当于上次偏差的 0.84 + 本次偏差的 0.16，减缓速度差值，减少对直立的干扰
+	Encoder_Integral += Encoder_bias;                                  			// 积分出位移 积分时间：10ms
+	Encoder_Integral =  Encoder_Integral + Movement;                       		// 这里其实是把Movement当速度偏值用，因此返回去看，Movement是速度
+	if(Encoder_Integral>10000)  	Encoder_Integral =  10000;             		// 积分限幅
+	if(Encoder_Integral<-10000)		Encoder_Integral = -10000;
+
+	// 这里耍了个把戏，Encoder_bias取反就是现在的左右编码器之和（就是现在的速度），因此对其积分的Encoder_Intergral取反就是位移
+	// 因此原来的速度Vo实际上等于0-Encoder_bias
+	velocity = -Encoder_bias * Velocity_Kp/100 - Encoder_Integral * Velocity_Ki/100;
+
+	if(Turn_Off(Angle_Balance,Voltage)==1||Flag_Stop==1) Encoder_Integral=0;	// 电机关闭后清除速率积分
 	return velocity;
 }
 /**************************************************************************
