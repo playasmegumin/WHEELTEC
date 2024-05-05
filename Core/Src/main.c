@@ -57,7 +57,7 @@ u32 Distance;                               //超声波测距
 u8 PID_Send;
 volatile u8 delay_50,delay_flag; 						//延时和调参相关变量
 u8 Flag_follow=0,Flag_avoid=0;							//超声波跟随、超声波壁障标志位
-u8 Flag_swing=0;										//GUAHOOK 摇摆模式
+u8 Flag_swing=0,Flag_job=0;								//GUAHOOK 摇摆模式 单步模式
 float Velocity_Left,Velocity_Right;	//车轮速度(mm/s)
 float Acceleration_Z;                       //Z轴加速度计
 float Balance_Kp=22500,Balance_Kd=108,Velocity_Kp=16000,Velocity_Ki=80,Turn_Kp=4200,Turn_Kd=0;//PID参数（放大100倍）

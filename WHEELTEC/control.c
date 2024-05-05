@@ -12,6 +12,9 @@
 float sin100[100] = {0,0.0627,0.1253,0.1873,0.2486,0.0309,0.3681,0.4257,0.4817,0.5358,0.5877,0.6374,0.6845,0.7289,0.7705,0.8090,0.8443,0.8763,0.9048,0.9297,0.9510,0.9685,0.9822,0.9921,0.9980,1,0.9980,0.9921,0.9822,0.9685,0.9510,0.9297,0.9048,0.8763,0.8443,0.8090,0.7705,0.7289,0.6845,0.6374,0.5877,0.5358,0.4817,0.4257,0.3681,0.3090,0.2486,0.1873,0.1253,0.0627,0,-0.0627,-0.1253,-0.1873,-0.2486,-0.3090,-0.3681,-0.4257,-0.4817,-0.5358,-0.5877,-0.6374,-0.6845,-0.7289,-0.7705,-0.8090,-0.8443,-0.8763,-0.9048,-0.9297,-0.9510,-0.9685,-0.9822,-0.9921,-0.9980,-1,-0.9980,-0.9921,-0.9822,-0.9685,-0.9510,-0.9297,-0.9048,-0.8763,-0.8443,-0.8090,-0.7705,-0.7289,-0.6845,-0.6374,-0.5877,-0.5358,-0.4817,-0.4257,-0.3681,-0.3090,-0.2486,-0.1873,-0.1253,-0.0627};
 // sin100_counter为当前的sin100数组下标，如果现在为swing模式并且Flag_Stop==0，sin100_counter会在0-100之间循环变化
 u8 sin100_counter = 0;
+u8 job_counter = 0, job_action = 0, job_pointer = 0;
+int job_list[20] = {0,1,0,2,0,1,0,2,0,1,0,2,0,1,0};
+int job_dir[4][3] = {{0,0,20},{1,1,20},{-1,+1,20},{+1,-1,20}}; // 停止 / 前进 / 左转 / 右转
 
 /**************************************************************************
 Function: Control function
@@ -48,7 +51,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) // 用于处理来自MPU6050的�
 		}
 		//--------------------------------------------------------
 
-		//********************************************************
+		// ========================= swing start =========================
 		Flag_Quatre++;										 // GUAHOOK: 分时器
 	//	if(Flag_swing==1 && Flag_Quatre == 4) 				 // 本来想写这个，但为了方便调整摇摆周期还是加了个Swing_period，在其声明处赋值。
 		if(Flag_swing==1 && Flag_Quatre == Swing_period*2-1) // Swing_period是摇摆周期，暂定Swing_period==2s
@@ -58,7 +61,46 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) // 用于处理来自MPU6050的�
 
 			Flag_Quatre = 0;								 // 重置Flag_Quatre
 		}
-		//********************************************************
+		// ========================== swing end ===========================
+
+		// ========================= job start =========================
+		if(Flag_job == 1 && Flag_Stop == 0)
+		{
+			// run
+			job_action = job_list[job_pointer];
+			job_counter++;
+			switch(job_action) {
+			case 1:
+				sin100[0] = 1;
+				Flag_Left = 0;
+				Flag_Right = 0;
+				break;
+			case 2:
+				sin100[0] = 0;
+				Flag_Left = 1;
+				Flag_Right = 0;
+				break;
+			case 3:
+				sin100[0] = 0;
+				Flag_Left = 0;
+				Flag_Right = 1;
+				break;
+			case 0:
+			default:
+				sin100[0] = 0;					// 这里默认将两个Flag置零，可能会影响到App的控制
+				Flag_Left = 0;
+				Flag_Right = 0;
+				break;
+			}
+
+			if(job_counter > job_dir[job_action][2])
+			{
+				job_pointer++;
+				job_counter = 0;
+				if(job_pointer > 19) Flag_Stop = 1, job_pointer = 0;
+			}
+		}else if(Flag_Stop == 1) job_counter = 0, job_pointer = 0, sin100[0] = 0;
+		// ========================== job end ==========================
 
 		if(Flag_Target==1)                        					// 每次Flag_Target为1的时候触发，所以这段逻辑触发的间隔是10ms
 		{
@@ -448,29 +490,40 @@ void Choose(int encoder_left,int encoder_right)
 	if((Flag_Stop==1)&&(encoder_left<10))		// 这个函数每次中断都会被执行，因此Flag赋值必须写全
 	{
 		count += myabs(encoder_right);
-		if(count>6&&count<135)		// 普通模式
+		if(count>6&&count<100)		// 普通模式
 		{
 			Flag_follow = 0;
 			Flag_avoid = 0;
 			Flag_swing = 0;
+			Flag_job = 0;
 		}
-		if(count>135&&count<270)	// 避障模式
+		if(count>100&&count<200)	// 避障模式
 		{
 			Flag_avoid = 1;
 			Flag_follow = 0;
 			Flag_swing = 0;
+			Flag_job = 0;
 		}
-		if(count>270&&count<405)	// 跟随模式
+		if(count>200&&count<300)	// 跟随模式
 		{
 			Flag_avoid = 0;
 			Flag_follow = 1;
 			Flag_swing = 0;
+			Flag_job = 0;
 		}
-		if(count>405&&count<540)	// 摇摆模式
+		if(count>300&&count<400)	// 摇摆模式
 		{
 			Flag_avoid = 0;
 			Flag_follow = 0;
 			Flag_swing = 1;
+			Flag_job = 0;
+		}
+		if(count>400&&count<540)
+		{
+			Flag_avoid = 0;
+			Flag_follow = 0;
+			Flag_swing = 0;
+			Flag_job = 1;
 		}
 		if(count>540)
 			count = 0;

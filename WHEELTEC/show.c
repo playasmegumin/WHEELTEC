@@ -23,6 +23,7 @@ void oled_show(void) // 答辩排版
 		 if(Flag_follow == 1) 	OLED_ShowString(70,0,"Follow");
 	else if(Flag_avoid == 1) 	OLED_ShowString(70,0,"Avoid ");
 	else if(Flag_swing == 1)	OLED_ShowString(70,0,"Swing ");
+	else if(Flag_job == 1)		OLED_ShowString(70,0,"Jobs  ");
 	else						OLED_ShowString(70,0,"Normal");
 
 		 //=============第二行显示Sin=======================// GUAHOOK: 修改显示页面

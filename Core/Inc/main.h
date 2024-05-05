@@ -78,7 +78,7 @@ extern int Voltage;               																 //电池电压采样相关的变量
 extern float Angle_Balance,Gyro_Balance,Gyro_Turn;     						 //平衡倾角 平衡陀螺仪 转向陀螺仪
 extern int Temperature;
 extern u32 Distance;                                          		//超声波测距
-extern u8 Flag_follow,Flag_avoid,Flag_swing;
+extern u8 Flag_follow,Flag_avoid,Flag_swing,Flag_job;
 extern volatile u8 delay_50,delay_flag;
 extern u8 PID_Send;
 extern float Acceleration_Z;                       //Z轴加速度计
