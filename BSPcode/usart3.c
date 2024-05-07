@@ -22,8 +22,8 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *UartHandle) //接收回调函数
 		if(uart_receive==0x59)  Flag_velocity=2;  //低速挡（默认值）
 		if(uart_receive==0x58)  Flag_velocity=1;  //高速档
 
-	  if(uart_receive>10)  //默认使用
-    {
+	if(uart_receive>10)																		// 默认使用
+    {																						// 自定义按键为bcdefghijklmno
 			if(uart_receive==0x5A)	    Flag_front=0,Flag_back=0,Flag_Left=0,Flag_Right=0;//刹车
 			else if(uart_receive==0x41)	Flag_front=1,Flag_back=0,Flag_Left=0,Flag_Right=0;//前
 			else if(uart_receive==0x45)	Flag_front=0,Flag_back=1,Flag_Left=0,Flag_Right=0;//后
@@ -33,17 +33,17 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *UartHandle) //接收回调函数
 																	Flag_front=0,Flag_back=0,Flag_Left=1,Flag_Right=0;  //左
 			else Flag_front=0,Flag_back=0,Flag_Left=0,Flag_Right=0;//刹车
   	}
-		if(uart_receive<10)     //备用app为：MiniBalanceV1.0  因为MiniBalanceV1.0的遥控指令为A~H 其HEX都小于10
-		{
-			Flag_velocity=1;//切换至高速档
-			if(uart_receive==0x00)	Flag_front=0,Flag_back=0,Flag_Left=0,Flag_Right=0;//刹车
-			else if(uart_receive==0x01)	Flag_front=1,Flag_back=0,Flag_Left=0,Flag_Right=0;//前
-			else if(uart_receive==0x05)	Flag_front=0,Flag_back=1,Flag_Left=0,Flag_Right=0;//后
-			else if(uart_receive==0x02||uart_receive==0x03||uart_receive==0x04)
-														Flag_front=0,Flag_back=0,Flag_Left=0,Flag_Right=1;  //左
-			else if(uart_receive==0x06||uart_receive==0x07||uart_receive==0x08)	    //右
-														Flag_front=0,Flag_back=0,Flag_Left=1,Flag_Right=0;
-			else Flag_front=0,Flag_back=0,Flag_Left=0,Flag_Right=0;//刹车
+	if(uart_receive<10)     //备用app为：MiniBalanceV1.0  因为MiniBalanceV1.0的遥控指令为A~H 其HEX都小于10
+	{
+		Flag_velocity=1;//切换至高速档
+		if(uart_receive==0x00)	Flag_front=0,Flag_back=0,Flag_Left=0,Flag_Right=0;//刹车
+		else if(uart_receive==0x01)	Flag_front=1,Flag_back=0,Flag_Left=0,Flag_Right=0;//前
+		else if(uart_receive==0x05)	Flag_front=0,Flag_back=1,Flag_Left=0,Flag_Right=0;//后
+		else if(uart_receive==0x02||uart_receive==0x03||uart_receive==0x04)
+													Flag_front=0,Flag_back=0,Flag_Left=0,Flag_Right=1;  //左
+		else if(uart_receive==0x06||uart_receive==0x07||uart_receive==0x08)	    //右
+													Flag_front=0,Flag_back=0,Flag_Left=1,Flag_Right=0;
+		else Flag_front=0,Flag_back=0,Flag_Left=0,Flag_Right=0;//刹车
   	}
 
 
@@ -71,10 +71,11 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *UartHandle) //接收回调函数
 						case 0x32:  Velocity_Kp=Data;break;
 						case 0x33:  Velocity_Ki=Data;break;
 						case 0x34:  Turn_Kp=Data;break;
-					  case 0x35:  Turn_Kd=Data;break;
-						case 0x36:  break; //预留
-						case 0x37:  break; //预留
-						case 0x38:  break; //预留
+						case 0x35:  Turn_Kd=Data;break;
+						// GUA: 改成了对应指令的时长
+						case 0x36:  job_dir[1][2]=Data;break; // 前进时长
+						case 0x37:  job_dir[2][2]=Data;break; // 左转时长
+						case 0x38:  job_dir[3][2]=Data;break; // 右转时长
 					}
 				}
 			    	Flag_PID=0;
