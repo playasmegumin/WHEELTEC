@@ -101,16 +101,28 @@ Core/main.cÀïÃæÔø¾­Ìáµ½¹ý£ºÓÉÓÚdelayµÄ¾«¶È²îÇ¿ÈËÒâ£¬±¾ÏîÄ¿²ÉÓÃmpu6050×Ô´øµÄÊ±¼äÖ
 
 Õâ¸öº¯Êý¾ÍÊÇ¸öÐ¡Ð¡µÄ×´Ì¬»ú¡£
 
-±êÊ¶Ä£Ê½µÄºËÐÄ±äÁ¿ÊÇFlag_avoidºÍFlag_follow¡£Èç¹ûFlag_avoid==1¾ÍÊÇ±ÜÕÏÄ£Ê½£¬Èç¹ûFlag_follow==1¾ÍÊÇ¸úËæÄ£Ê½¡£Òò´ËÔÚÕâÀïÎÒ¼ÓÁËÒ»¸öFlag_swing±íÊ¾Ò¡°ÚÄ£Ê½¡£
+±êÊ¶Ä£Ê½µÄºËÐÄ±äÁ¿ÊÇFlag_avoidºÍFlag_follow¡£Èç¹ûFlag_avoid==1¾ÍÊÇ±ÜÕÏÄ£Ê½£¬Èç¹ûFlag_follow==1¾ÍÊÇ¸úËæÄ£Ê½¡£Òò´ËÔÚÕâÀïÎÒ¼ÓÁËÒ»¸öFlag_swing±íÊ¾Ò¡°ÚÄ£Ê½¡£ÎÒ»¹Ôö¼ÓÁËFlag_job±íÊ¾Ö¸Áî¶ÓÁÐÄ£Ê½¡£
 
 ´ËÍâ£¬ÎÒ»¹Ìí¼ÓÁËsin100[]Êý×éºÍsin100_counter¡£Ç°ÕßÊÇÎÒÓÃmatlabµÃµ½µÄ100¸ö²ÉÑùµãµÄsinº¯Êý£¬ºóÕßÊÇÒ»¸öÈ«¾Ö±äÁ¿£¬±êÊ¾Ð¡³µÔÚ´ËÊ±´Ë¿ÌËù´¦µÄÏàÎ»£¨²î²»¶àÕâ¸öÒâË¼£©¡£¸ù¾ÝÏàÎ»¿ÉÒÔµÃµ½´ËÊ±Ð¡³µÓ¦ÓÐµÄÄ¿±êËÙ¶È¡£Ö»ÒªËÙ¶ÈÊÇÈý½Çº¯Êý£¬Î»ÒÆÒ²½«ÊÇÈý½Çº¯Êý£¬½è´ËÊµÏÖÐ¡³µµÄÒ¡°Ú¡£
+
+ÔÚ×îÐÂµÄ¸üÐÂÖÐ£¬JobÄ£Ê½µÄÖ÷Òª´úÂëÂß¼­Ò²ºÍSwingÄ£Ê½µÄ´úÂë´¦ÓÚ´ó¸ÅÒ»ÖÂµÄµØ·½£¬¿ÉÒÔ·Ç³£ÈÝÒ×µÄ·¢ÏÖ¡£
 
 ### WHEELTEC/show.c
 
 ÕâÊÇÓÃÓÚÉè¼ÆOLEDÆÁÄ»µÄÎÄ¼þ¡£
 
-ÎÒÐÞ¸ÄÁËÀïÃæµÄ²¿·ÖÄÚÈÝÒÔÔÚOLEDÉÏÏÔÊ¾sin100[]µ±Ç°µÄÊýÖµ¡£
+ÎÒÐÞ¸ÄÁËÀïÃæµÄ²¿·ÖÄÚÈÝÒÔÔÚOLEDÉÏÏÔÊ¾sinºÍPointerµ±Ç°µÄÊýÖµ¡£
+
+ÒÑ¾­ÐÞÕýÁËÆÕÍ¨Ä£Ê½ÏÂAngleÒ²»á±»Ìæ»»³ÉsinµÄÎÊÌâ¡£
 
 ### Core/Inc/main.h
 
-ÎÒÔÚÀïÃæÌí¼ÓÁËÏà¹ØµÄ±äÁ¿ÉùÃ÷ÒÔÁîÉÏÊöÐÐÎªÉúÐ§¡£
+ÎÒÔÚÀïÃæÌí¼ÓÁËÏà¹ØµÄ±äÁ¿ÉùÃ÷ÒÔÁîÏà¹ØÐÐÎªÉúÐ§¡£
+
+### BSPcode/usart3.c
+
+ÕâÀï°üÀ¨ÁËÀ¶ÑÀÒ£¿ØµÄÊý¾Ý½ÓÊÕºÍ½â¶ÁÂß¼­¡£ÔÚÀïÃæËÑË÷job_pointer¾Í¿ÉÒÔÕÒµ½·¢ÉúÁËÐÞ¸ÄµÄµØ·½¡£
+
+×Ô¶¨Òå°´¼üµÄ±¾ÖÊ¾ÍÊÇabcdefghijkµÈ×ÖÄ¸£¬ÕâÀïÊÇ¸ù¾ÝÊÕµ½µÄ×ÖÄ¸asciiÖµÖ´ÐÐ¶ÔÓ¦µÄÂß¼­¡£
+
+°´¼üÊµÏÖµÄÇå¿ÕÖ¸Áî¶ÓÁÐºÍÌí¼ÓÐÐ¶¯µÈÂß¼­¶¼ÔÚÕâÀïÊµÏÖ¡£
