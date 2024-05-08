@@ -78,11 +78,15 @@ extern int Voltage;               																 //电池电压采样相关的变量
 extern float Angle_Balance,Gyro_Balance,Gyro_Turn;     						 //平衡倾角 平衡陀螺仪 转向陀螺仪
 extern int Temperature;
 extern u32 Distance;                                          		//超声波测距
-extern u8 Flag_follow,Flag_avoid,Flag_swing;
+extern u8 Flag_follow,Flag_avoid,Flag_swing,Flag_job;
 extern volatile u8 delay_50,delay_flag;
 extern u8 PID_Send;
 extern float Acceleration_Z;                       //Z轴加速度计
 extern float Balance_Kp,Balance_Kd,Velocity_Kp,Velocity_Ki,Turn_Kp,Turn_Kd;
+
+extern int job_dir[4][3], job_list[60];								// GUA: 添加外部变量声明，方便蓝牙修改
+extern int job_counter, job_action, job_pointer, job_usart_pointer;	// 这里是方便show.c里面展示数据
+
 extern float Velocity_Left,Velocity_Right;	//车轮速度(mm/s)
 //外部声明当前速度
 extern u8 sin100_counter;

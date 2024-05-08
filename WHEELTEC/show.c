@@ -23,13 +23,33 @@ void oled_show(void) // 答辩排版
 		 if(Flag_follow == 1) 	OLED_ShowString(70,0,"Follow");
 	else if(Flag_avoid == 1) 	OLED_ShowString(70,0,"Avoid ");
 	else if(Flag_swing == 1)	OLED_ShowString(70,0,"Swing ");
+	else if(Flag_job == 1)		OLED_ShowString(70,0,"Jobs  ");
 	else						OLED_ShowString(70,0,"Normal");
 
 		 //=============第二行显示Sin=======================// GUAHOOK: 修改显示页面
- 		                      		OLED_ShowString(00,10,"Sin  ");
+ 		 if(Flag_swing == 1)   		OLED_ShowString(00,10,"Sin  ");
+ 	else if(Flag_job == 1)   		OLED_ShowString(00,10,"Point");
+ 	else							OLED_ShowString(00,10,"Angle");
  	if(sin100[sin100_counter]<0) 	OLED_ShowString(48,10,"-");
  	if(sin100[sin100_counter]>=0)	OLED_ShowString(48,10,"+");
  		                      		OLED_ShowNumber(56,10, myabs((int)(sin100[sin100_counter]*100)),3,12);
+
+ 	if(Flag_swing == 1){
+ 										OLED_ShowString(00,10,"Sin  ");
+ 		if(sin100[sin100_counter]<0)	OLED_ShowString(48,10,"-");
+		if(sin100[sin100_counter]>=0)	OLED_ShowString(48,10,"+");
+										OLED_ShowNumber(56,10, myabs((int)(sin100[sin100_counter]*100)),3,12);
+ 	}else if(Flag_job == 1){
+ 										OLED_ShowString(00,10,"Point");
+ 										OLED_ShowString(48,10,"+");
+ 										OLED_ShowNumber(56,10, job_pointer,3,12);
+ 	}else{
+ 										OLED_ShowString(00,10,"Angle");
+ 		if( Angle_Balance<0)			OLED_ShowString(48,10,"-");
+		if(Angle_Balance>=0)			OLED_ShowString(48,10,"+");
+										OLED_ShowNumber(56,10, myabs((int)Angle_Balance),3,12);
+ 	}
+
 
  		 //=============第二行显示角度=======================//
 //		                      	OLED_ShowString(00,10,"Angle");

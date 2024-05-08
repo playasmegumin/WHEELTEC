@@ -2,6 +2,87 @@
 
 ±¾ÏîÄ¿»ùÓÚ ¡°WHEELTEC B570 Æ½ºâÐ¡³µÔ´Âë£¨HAL¿â°æ-STM32CubeIDE£©¡± ¿ª·¢¶øÀ´¡£
 
+### 2024.5.8 ¸üÐÂ£ºÍê³ÉÁËJobÄ£Ê½µÄÖ÷Òª¿ª·¢ÈÎÎñ
+
+#### ¸üÐÂÄÚÈÝ
+
+1. ÐÞ¸ÄÁËREADMEÎÄ¼þ
+2. ÍêÉÆÁËJobÄ£Ê½£¬ÏÖÔÚËü¼È¿ÉÒÔ°´ÕÕÔ¤ÉèÖ¸Áî¶ÓÁÐÔËÐÐ£¬Ò²¿ÉÒÔ°´ÕÕÒ£¿ØappÊäÈëµÄÖ¸Áî¶ÓÁÐÔËÐÐ
+   - ÔÚJobÄ£Ê½ÏÂ£¬OLEDÆÁÄ»ÖÐµÄAngleÊýÖµ»á±ä³ÉPointer£¨job_pointer£©£¬¿ÉÒÔÍ¨¹ý¹Û²ìPointerÅÐ¶ÏÐ¡³µÕýÔÚÔËÐÐÖ¸Áî¶ÓÁÐµÄÄÄÒ»¸öÐÐ¶¯
+   - Ö¸Áî¶ÓÁÐµÄÊý¾Ý½á¹¹Îªjob_list[60]£¬ÆäÖÐ0\~19ÎªÔ¤ÉèÖ¸Áî¶ÓÁÐ£¬20\~59ÎªÓÃ»§ÊäÈëÖ¸Áî¶ÓÁÐ *£¨¼´ÔËÐÐÓÃ»§Ö¸Áî¶ÓÁÐÊ±£¬Pointer»á´Ó20¿ªÊ¼£©*
+   - ÓÃ»§ÊäÈëÖ¸Áî¶ÓÁÐµÄµÚÒ»¸öÐÐ¶¯¹Ì¶¨Îª¡°Í£Ö¹¡±£¬ÓÃ»§ÊäÈëµÄµÚÒ»¸öÐÐ¶¯»áÔÚPointerµÈÓÚ22Ê±½øÐÐ
+   - ÓÃ»§ÊäÈëÖ¸Áî¶ÓÁÐµÄÐÐ¶¯×ÜÊÇ ¡°ÓÃ»§ÊäÈëÐÐ¶¯¡±+¡°Í£Ö¹¡±£¬ÀýÈç£¬µ±ÓÃ»§ÊäÈëµÄÇ°Á½¸öÐÐ¶¯Îª ¡°Ç°½ø¡±ºÍ¡°×ó×ª¡± Ê±£¬job_list[20] == Í£Ö¹£¬job_list[21] == Í£Ö¹£¬job_list[22] == Ç°½ø£¬job_list[23] == Í£Ö¹£¬job_list[24] == ×ó×ª£¬job_list[25] == Í£Ö¹¡£¿ÉÒÔ½áºÏPointerµÄÊýÖµ¹Û²ìÕâÒ»»úÖÆ¡£
+3. ÐÞ¸ÄÁËÒ£¿ØÄ£¿é(usart3.c)£º
+   - Ôö¼ÓÁËÓÃÓÚ¿ØÖÆJobÄ£Ê½ÈýÖÖÐÐ¶¯Ê±³¤²ÎÊýµÄ¡°²ÎÊýÉèÖÃÌõ¡±
+   - Ôö¼ÓÁËÁîÐ¡³µÒ»¼üÌÉµ¹µÄ°´¼ü *£¨ÌÉµ¹£¡£©*
+   - Ôö¼ÓÁËÖ¸Áî¶ÓÁÐÔËÐÐ¿ØÖÆµÄÏà¹Ø°´¼üÂß¼­£¬°üÀ¨£ºÇå¿Õ¡¢´ÓÍ·Æô¶¯¡¢ÔÝÍ£¡¢È¡ÏûÔÝÍ£
+     - Ê¹ÓÃ¡°Çå¿Õ¡±ºó£¬PointerÓ¦Îª20£¬ËæºóÍ£ÔÚ21£¬ÕâÁ½¸öÐÐ¶¯¶¼ÊÇ¡°Í£Ö¹¡±
+     - Ê¹ÓÃ¡°´ÓÍ·Æô¶¯¡±ºó£¬PointerÓ¦Îª20£¬²¢¿ªÊ¼ÍùºóÖ´ÐÐÖ±µ½59
+     - Ê¹ÓÃ¡°ÔÝÍ£¡±ºó£¬PointerÓ¦Í£ÔÚµ±Ç°ÐÐ¶¯ºóµÄµÚÒ»¸öÆæÊý£¬ÈçPointerµ±Ç°Îª22£¬ÄÇÃ´ËüÓ¦¸ÃÔÚ23Í£Ö¹
+     - Ê¹ÓÃ¡°È¡ÏûÔÝÍ£¡±ºó£¬PointerÓ¦¸Ã»á¼ÌÐøÔËÐÐ *£¨µ«ÎÒ²¢Ã»ÓÐ²âÊÔÕâÒ»Âß¼­£¬²âÁË¸úÎÒËµÒ»ÉùÐ»Ð»Äã£©*
+   - Ôö¼ÓÁËÏòµ±Ç°Ö¸Áî¶ÓÁÐÎ²²¿Ôö¼ÓÐÂÐÐ¶¯µÄ°´¼üÂß¼­£ºÍ£Ö¹¡¢Ç°½ø¡¢×ó×ª¡¢ÓÒ×ªµÈËÄÖÖÐÐ¶¯
+     - ×î¶à¿ÉÊäÈë18¸öÐÐ¶¯£¬Ö®ºóÊäÈëµÄÐÐ¶¯»á¸²¸Ç×îºóÒ»¸öÐÐ¶¯ *£¨ÎÒÃ»ÓÐ²âÊÔÕâ¸öÂß¼­£¬Èç¹û±¬ÁË¾Í¶ÏµçÖØÆô£¬½¨Òé²»Òª³¬¹ý15¸öÐÐ¶¯£©*
+     - ¡°ÐÐ¶¯£ºÍ£Ö¹¡±£¬¡°ÐÐ¶¯£ºÇ°½ø¡±£¬¡°ÐÐ¶¯£º×ó×ª¡±£¬¡°ÐÐ¶¯£ºÓÒ×ª¡±µÈ°´¼ü»áÏòµ±Ç°ÒÑÓÐµÄÓÃ»§ÊäÈëÖ¸Áî¶ÓÁÐÎ²²¿Ôö¼ÓÐÂµÄÐÐ¶¯£¨ÒÑ²âÊÔÄÜÓÃ£¬²»ÄÜÓÃ¾ÍÖØÆô£©
+   - ÐèÒª°´ÕÕ½ØÍ¼ÊÖ¶¯ÉèÖÃÒ£¿ØappµÄ²Ù¿Ø½çÃæ£¨ÎÞ·¨Í¨¹ý¡°»ñÈ¡Éè±¸²ÎÊý¡±»ñµÃÐ¡³µ³ÌÐòÖÐÐÂÔö¼ÓµÄÈý¸ö²ÎÊýÊýÖµ£¬ÐèÒªÊÖ¶¯µ÷ÕûÒ»ÏÂ£©
+   - Áí£¬Ã¿´ÎÖØÐÂÓÃÀ¶ÑÀÁ¬½ÓÐ¡³µËÆºõ¶¼»áÖØÐÂ·¢ËÍËùÓÐ²ÎÊý£¬°üÀ¨°´¼üÊäÈëÀúÊ·£¬¾¯ÌèÒòÎªÕâÒ»µã²úÉúµÄÁîÈËÀ§»óµÄÎÊÌâ *£¨Î´ÑéÖ¤£¬Ö¤ÊµµÄ»°ËµÒ»Éù£©*
+4. Ïà¹ØÊý¾Ý½á¹¹ËµÃ÷£º
+   - job_list[60]£ºÕâ¸öÊý×éºÜÖØÒª£¡JobÄ£Ê½ÏÂµÄÖ¸Áî¶ÓÁÐ£¬ÆäÖÐ0\~19±»»®·Ö¸øÔ¤ÉèµÄÄ¬ÈÏ¶ÓÁÐ£¬¿ÉÒÔÔÚjob_listµÄ¶¨Òå´¦ÕÒµ½Ïà¹ØÄÚÈÝ£»20\~59±»»®·Ö¸øÓÃ»§ÊäÈëÖ¸Áî¶ÓÁÐ¡£ÊýÖµÖ»¿ÉÄÜÊÇ0¡¢1¡¢2¡¢3¡¢4£¬·Ö±ð´ú±íÍ£Ö¹¡¢Ç°½ø¡¢×ó×ª¡¢ÓÒ×ªÒÔ¼°ÔÝÍ£¡£4µÄ×÷ÓÃ»úÖÆºÍÇ°ÃæËÄÖÖ²»Ò»Ñù£¨ÌåÏÖÔÚcontrol.cµÄÁ÷³Ì¿ØÖÆÂß¼­ÖÐ£©£¬Òò´Ëjob_dirÖÐÖ»ÓÐ0123ËÄÖÖ¡£
+   - job_action£ºÕâ¸öÊý¾Ý½á¹¹²»ÐèÒªÌØ±ð¹Ø×¢¡£JobÄ£Ê½ÏÂÓÃÓÚÖ¸Ê¾µ±Ç°ÕýÔÚ½øÐÐµÄÐÐ¶¯£¬¼´job_action = job_list[job_pointer]¡£¿ÉÄÜÈ¡0¡¢1¡¢2¡¢3¡¢4ËÄ¸öÊýÖµ¡£µ±job_action==4Ê±Ð¡³µ»áÔÝÍ£Ö´ÐÐÖ¸Áî¶ÓÁÐ£¬µ«½ö¿ÉÄÜ³öÏÖÔÚPointer > 20£¨µ±Ç°´¦ÓÚÓÃ»§ÊäÈëÖ¸Áî¶ÓÁÐ£©µÄÇé¿öÏÂ¡££¨×¢Òâ£¬¡°È¡ÏûÔÝÍ£¡±Âß¼­½ö¶ÔPointer>20ÓÐÐ§£©
+   - job_dir\[4\]\[3\]£ºÕâ¸öÊý¾Ý½á¹¹²»ÐèÒªÌØ±ð¹Ø×¢¡£JobÄ£Ê½ÏÂËÄÖÖÐÐ¶¯µÄÊý¾Ý½á¹¹£¬ÆäÖÐµÚÈý¸öÔªËØÖ¸µÄÊÇ¸ÃÐÐ¶¯µÄ³ÖÐøÊ±³¤£¨200µÈÓÚ1Ãë£©£¬Õâ¸öÊý¾Ý½á¹¹²»ÐèÒªÌØ±ð¹Ø×¢¡£
+   - job_counter£ºÕâ¸öÊý¾Ý½á¹¹²»ÐèÒªÌØ±ð¹Ø×¢¡£JobÄ£Ê½ÏÂÓÃÓÚ¼ÆÊ±µÄ±äÁ¿£¬ÊýÖµ·¶Î§ÊÇ0~job_dir\[job_action\]\[2\]¡£ÈçÉè¶¨×ó×ªÓÒ×ªµÄ³ÖÐøÊ±³¤Îª150µÄ»°£¬µ±job_counter´Ó0Ôö¼Óµ½150Ê±¼´ÈÏÎªµ±Ç°×ªÏòÐÐ¶¯ÒÑÍê³É¡£
+   - job_pointer£ºÕâ¸ö±äÁ¿ºÜÖØÒª£¡JobÄ£Ê½ÏÂÓÃÓÚÖ¸Ê¾µ±Ç°´¦ÓÚÖ¸Áî¶ÓÁÐÖÐµÄÄÄÒ»¸öÔªËØµÄÖ¸Õë£¨¾ÍÊÇÏÂ±ê£©£¬´ËÊ±´Ë¿ÌÐ¡³µ×ÜÊÇÔÚÖ´ÐÐjob_list[job_pointer]ËùÖ¸Ê¾µÄÐÐ¶¯¡£
+   - job_usart_pointer£ºÕâ¸ö±äÁ¿Ò»°ãÖØÒª¡£JobÄ£Ê½ÏÂÓÃÓÚÖ¸Ê¾µ±Ç°ÓÃ»§ÊäÈëÖ¸Áî¶ÓÁÐ¶ÓÎ²ËùÔÚÖ®´¦µÄÖ¸Õë£¨Ò²ÊÇÏÂ±ê£©£¬µ±ÓÃ»§ÊäÈëÐÂµÄÐÐ¶¯Ö¸ÁîÊ±£¬×ÜÊÇ»á±»ÖÃÈëjob_list[job_usart_pointer]ÖÐ¡£
+   - sin100[0]£ºÕâ¸ö±äÁ¿ºÜÖØÒª£¡Õâ¸öÔªËØÊÇÄ¿Ç°Ð¡³µµÄÄ¿±êËÙ¶È£¬Ö®ËùÒÔÏÔµÃÈç´Ë´Ö²ÚÊÇÒòÎªÔÚÊµÏÖSwingÄ£Ê½µÄ¹ý³ÌÖÐÐÞ¸ÄÁËVelocityº¯ÊýµÄ¿ØÖÆÂß¼­£¬µ¼ÖÂËùÓÐÄ£Ê½ÏÂµÄÄ¬ÈÏÄ¿±êËÙ¶È¶¼±ä³ÉÁËsin100[0]¡£Èç¹û²»Àí½âÕâÒ»µãµÄ»°£¬¿ÉÄÜ»á¸Ðµ½À§»ó¡£
+
+ÎªÁËÈÃ¶ÁÕß»ù±¾ÁË½â±¾´Î¸üÐÂµÄÄÚÈÝ£¬ÕâÀïÌá¹©ÁËÒ»¸öÉÏÊÖÁ÷³Ì¡£
+
+#### ÉÏÊÖÁ÷³Ì
+
+1. ÌáÇ°ÇåÀí1Æ½·½Ã××óÓÒµÄµØÃæ£¨É¨É¨¾ÍÐÐ£¬Ô½¸É¾»Ô½ºÃ£©£¬ÓÃÊª½íÉÔÎ¢²Á²ÁÐ¡³µ³µÂÖ£¬Õâ¶ÔÐ§¹ûµÄÓ°ÏìºÜ´ó£¡
+2. ´ò¿ªÀ¶ÑÀÒ£¿Øapp£¬½«Ïà¹Ø°´¼üÃû³ÆÐÞ¸ÄµÃºÍ½ØÍ¼Ò»Ñù£»½«Ïà¹Ø²ÎÊýÌõÃû³ÆºÍÊýÖµ·¶Î§ºÍÆðÊ¼ÖµÒ²ÐÞ¸ÄµÃºÍ½ØÍ¼Ò»Ñù¡£°´Å¥µÄÎ»ÖÃºÍ·¢ËÍµÄÊý¾ÝÒ»Ò»¶ÔÓ¦£¬Òò´ËÒªÌØ±ð×¢Òâ°´Å¥µÄÎ»ÖÃÊÇ²»ÊÇ¶ÔµÄ¡£°´Å¥·¢ËÍµÄÊý¾Ý¿ÉÒÔÔÚ¡±Ö÷Ò³¡±µÄdebugÀ¸¿´¼û£¬¾ÍÊÇÒ»¶Ñ×ÖÄ¸¡£*£¨½ØÍ¼ÔÚÄÄ£¿ÏÂ´ÎÔÙ·¢githubºÃÁË£©*
+3. Æô¶¯Ð¡³µ£¬ÏÈ²»Á¬½ÓÀ¶ÑÀ£¬ÏÈÐý×ªÓÒ³µÂÖÊ¹OLEDÆÁÄ»ÖÐµÄ¡±Ä£Ê½¡°ÐÐ±ä³ÉSwing£¬´ËÊ±¡±Angle¡°»á±ä³É¡±Sin¡°¡£ÕâÊÇÒ¡°ÚÄ£Ê½£¬Ð¡³µ½«ÖØ¸´Ç°ºó°Ú¶¯¡£Sin»áÖ¸Ê¾Ð¡³µµÄÄ¿±êËÙ¶ÈÔÚÒ»Õû¸ösinÖÜÆÚÖÐËù´¦µÄÎ»ÖÃ£¨0~100ÎªÒ»¸öÍêÕûÖÜÆÚ£©
+4. ½«Ð¡³µ·Åµ½µØÉÏ£¬°´ÏÂÆô¶¯¼ü£¬Ð¡³µ½«¿ªÊ¼Ç°ºóÍù¸´°Ú¶¯£¨°´ÏÂÆô¶¯¼ü½«¸Ä±äFlag_StopµÄÊýÖµ£¬0±ä1»ò1±ä0£©£¬Sin»áÓÉ0±ä100ÔÙ´Ó0±ä100¡£
+5. ÓÃÊÖ¹Ì¶¨Ð¡³µ£¬°´ÏÂÆô¶¯¼ü£¬Ð¡³µ»áÍ£Ö¹ÔË×÷ÇÒ²»±£³ÖÆ½ºâ¡££¨Flag_Stop = 1£¬1ÎªÍ£Ö¹×´Ì¬£©
+6. ×ª¶¯ÓÒ³µÂÖ£¬Ö±µ½¡±Ä£Ê½¡°ÐÐ±ä³ÉJob£¬´ËÊ±¡±Angle¡°»á±ä³É¡±Pointer¡°¡£ÕâÊÇÖ¸Áî¶ÓÁÐÄ£Ê½£¬Ð¡³µ½«°´ÕÕÒ»¶¨µÄË³ÐòÖ´ÐÐÖ¸Áî¡£Pointer»áÖ¸Ê¾Ð¡³µµ±Ç°ÕýÔÚÖ´ÐÐµÄÊÇµÚ¼¸¸öÐÐ¶¯£¨¶ÔÓ¦job_listÊý×éµ±Ç°µÄÏÂ±ê£¬¼´job_pointer£©¡£
+7. ½«Ð¡³µ·Åµ½µØÉÏ£¬°´ÏÂÆô¶¯¼ü¡£PointerÎª0~2Ê±»á±£³ÖÔ­µØÆ½ºâ£¬ËæºóÇ°½ø¡¢×ó×ª¡¢Ç°½ø¡¢×ó×ª¡¢Ç°½ø¡¢×ó×ª¡¢Ç°½ø£¬ËæºóÍ£Ö¹¡£Ð¡³µ»á×ß³öÒ»¸ö¾ØÐÎµÄÂ·¾¶£¬ÌìÆøºÃµÄ»°Ó¦¸ÃÊÇÕý·½ÐÎ¡£×îºó£¬Pointer»áÔÚÊýÖµ19Í£ÏÂÀ´£¬´ú±íÒÑ¾­½áÊøÔ¤ÖÃÖ¸Áî¶ÓÁÐµÄÔËÐÐ¡£
+8. ²»ÐèÒªÔÙ°´ÏÂÆô¶¯¼ü£¬¿ÉÒÔÔÚÐ¡³µ´¦ÓÚÆ½ºâ×´Ì¬Ê±Ö±½Ó½øÐÐºóÃæµÄ²½Öè
+9. ÓÃÀ¶ÑÀÒ£¿ØappÁ¬½ÓÐ¡³µ£¬×ªµ½¡±µ÷ÊÔ¡°±êÇ©Ò³£¬ÓÃÓÒÉÏ½ÇµÄ²Ëµ¥¡±»ñÈ¡Éè±¸²ÎÊý¡°*£¨µ±È»£¬²»×öÒ²Ã»ÓÐÎÊÌâ£©*
+10. °´ÏÂ¡±Çå¿Õ¡°°´¼ü£¬Ð¡³µ»á½øÈëÓÃ»§ÊäÈëÖ¸Áî¶ÓÁÐ£¬Pointer»áÏÈ±ä³É20£¬È»ºóÍ£ÔÚ21¡£´ËÊ±Ð¡³µ²»»á²úÉúÈÎºÎÔË¶¯£¬»áÔ­µØ±£³ÖÆ½ºâ¡£
+11. ÒÀ´Î°´ÏÂ¡±ÐÐ¶¯£º×ó×ª¡°¡¢¡±ÐÐ¶¯£ºÓÒ×ª¡°¡¢¡±ÐÐ¶¯£º×ó×ª¡°¡¢¡±ÐÐ¶¯£ºÓÒ×ª¡°¡¢¡±ÐÐ¶¯£ºÇ°½ø¡°£¬ÔÚ¡±Ê×Ò³¡°±êÇ©Ò³µÄdebugÖ¸Ê¾¿ò¿ÉÒÔ¿´µ½app·¢ËÍÁËgigih¡£Ð¡³µ´ËÊ±»á½ÓÊÕµ½Ö¸Áî£¬µ«²»»á×÷³öÐÐ¶¯¡£
+12. °´ÏÂ¡±´ÓÍ·¿ªÊ¼¡°£¬Pointer»á´Ó20¿ªÊ¼Ôö³¤£¬µ½22Ê±½øÐÐµÚÒ»¸öÐÐ¶¯¡±×ó×ª¡°¡£½áÊøÐÐ¶¯ºó£¬PointerÈÔ»áÔö³¤Ö±µ½59£¬µ«ºóÃæÄ¬ÈÏ¾ùÎª¡±Í£Ö¹¡°Ö¸Áî£¬Ð¡³µ²»»áÔÙÓÐÈÎºÎÓÐÒâÒåµÄÐÐ¶¯¡£
+13. Ð¡³µ½áÊøÐÐ¶¯ºó£¬ÔÙ´Î°´ÏÂ¡±´ÓÍ·¿ªÊ¼¡°£¬²¢ÔÚÐ¡³µÐÐ¶¯µÄ¹ý³ÌÖÐ°´ÏÂ¡±ÐÐ¶¯ÔÝÍ£¡°£¬Ð¡³µ»áÍ£Ö¹ÔËÐÐÖ¸Áî¶ÓÁÐ£¬Ô­µØ±£³ÖÆ½ºâ¡£°´ÏÂ¡°È¡ÏûÔÝÍ£¡±£¬Ð¡³µ»á¼ÌÐøÖ´ÐÐ*£¨ËüÓ¦¸Ã»á£¬µ«ÎÒÃ»²â£©*
+14. ÓÃÊÖ±£»¤Ð¡³µ£¬°´ÏÂ¡°ÌÉµ¹£¡¡±£¬Ð¡³µ»áÖ±½ÓÌÉµ¹£¬Ð§¹ûµÈÍ¬ÓÚ°´ÏÂÆô¶¯¼ü¡£*£¨Æô¶¯¼üÊÇÐ¡³µµçÂ·°åÉÏ×Ô´øµÄÄÇ¸ö°´Å¥£©*
+15. Èç¹ûÐ¡³µÈÔÊÇJobÄ£Ê½£¬ÔÙ´Î°´ÏÂÆô¶¯¼üÊ±Pointer½«ÖÃ0£¬ÈÔ´ÓÔ¤Éè¶ÓÁÐ¿ªÊ¼¡£µ«¿ÉÒÔËæÊ±°´ÏÂ¡°Çå¿Õ¡±°´Å¥ºÍ¡±´ÓÍ·¿ªÊ¼¡±°´Å¥ÁîÆä½øÈëÓÃ»§ÊäÈëÖ¸Áî¶ÓÁÐ£¨Pointer±äÎª20£©£¬×¢Òâ£¬ÕâÀïµÄºËÐÄÊÇPointer¡£JobÄ£Ê½Ð¡³µ½«Ö´ÐÐÊ²Ã´ÐÐ¶¯£¬ÔËÐÐ×´Ì¬ÈçºÎ£¬¶¼¿ÉÒÔÍ¨¹ýPointer½øÐÐÅÐ¶Ï¡£
+16. Äã×ÜÊÇÄÜ¹Û²ìµ½£¬µ±PointerÎªÆæÊýÊ±Ð¡³µ»áÖ´ÐÐ¡±Í£Ö¹¡°ÐÐ¶¯¡£
+
+#### ¿ª·¢½¨Òé
+
+Èç¹ûÄãÐèÒªÐÞ¸ÄÏà¹ØÂß¼­£¬ÄãÓ¦¸Ã¹Ø×¢ÕâÐ©ÎÄ¼þ£º
+
+1. WHEELTEC/control.c£º°üº¬Ö÷ÒªµÄ¿ØÖÆÂß¼­£¬°üÀ¨JobÄ£Ê½µÄÖ÷ÒªÁ÷³Ì¿ØÖÆ¡£Èç¹ûÄãÏëÒªÐÞ¸ÄJobÄ£Ê½ÖÐ¼ÓËÙºÍ¼õËÙµÄ·½Ê½£¬¿ÉÒÔ¹Ø×¢ÕâÀï¡£
+2. BSPcode/usart3.c£º°üº¬À¶ÑÀÒ£¿ØÊäÈëµÄÐÅºÅ½â¶ÁÂß¼­¡£Èç¹ûÄãÏëÒªÔö¼ÓÐÂµÄ°´Å¥»òÕßÐÞ¸ÄÊý¾Ý½â¶Á»á¸øÐ¡³µ²ÎÊý´øÀ´µÄÓ°Ïì£¬¿ÉÒÔ¹Ø×¢ÕâÀï¡££¨ÓÐGUAµÄµØ·½¾ÍÊÇÎÒÐÞ¸Ä¹ýµÄ£©
+3. WHEELTEC/show.c£º°üº¬OLEDÆÁÄ»µÄÏÔÊ¾Âß¼­¡£Èç¹ûÄãÏëÒªÐÞ¸ÄOLEDÆÁÄ»ÉÏÕ¹Ê¾µÄÐÅÏ¢£¬¿ÉÒÔ¹Ø×¢ÕâÀï¡£Áí£¬ÕâÀïµÄ´úÂëºÜºÃÀí½â£¬µ«ÊÇÅÅ°æÒÀÍÐ´ð±ç¡£
+
+´úÂëÖÐ°üº¬µÄ×¢ÊÍÏ£Íû¿ÉÒÔ¸ü½øÒ»²½°ïÖúÄã¡£
+
+### 2024.5.7 ¸üÐÂ£º¸Ä½øJobÄ£Ê½
+
+¸üÐÂÄÚÈÝ£º
+
+1. ¸ã¶¨ÁËOLEDÏÔÊ¾ÆÁÔÚ²»Í¬Ä£Ê½ÏÂµÄÏÔÊ¾ÎÊÌâ£¬±ÈÈçÔÚNormalÄ£Ê½ÏÂÏÖÔÚÓÖ¿ÉÒÔ¿´µ½AngleÁË¡£
+
+2. ÔÚÀ¶ÑÀÒ£¿ØappÉÏÔö¼ÓÁËJobÄ£Ê½Ç°½ø¡¢×ó×ª¡¢ÓÒ×ª³ÖÐøÊ±³¤µÄ¿ìËÙµ÷²Î£¬ÏÖÔÚËüÃÇ·Ö±ðÊÇ²ÎÊý6¡¢7¡¢8¡£200¶ÔÓ¦1Ãë¡£
+
+3. ¿¼ÂÇ¼ÓÈëµ¥²½Ò£¿Ø¹¦ÄÜ¡£
+
+4. ¿¼ÂÇÈÃÐ¡³µÔÚJobÄ£Ê½ÏÂ½áÊøÖ¸Áî¶ÓÁÐºó»Ö¸´Æ½ºâ×´Ì¬¶ø²»ÊÇStop£¨µ¹ÏÂ£©¡£
+
+### 2024.5.5 ¸üÐÂ£ºÔö¼ÓÁËJobÄ£Ê½£¬ÔÚgitÖÐÐÂÔöJob·ÖÖ§
+
+Í¨¹ýÐÞ¸Äsin100[0]µÄÊýÖµ¿ØÖÆËÙ¶È£¬Í¨¹ýÐÞ¸ÄFlag_LeftºÍFlag_Right¿ØÖÆ×ª¶¯¡£
+
+µ÷ÊÔÊ±Ðè×¢ÒâÖØÖÃÊÇ·ñÓÐÐ§£¬ÖÁÓÚÀ¶ÑÀ¿ØÖÆÒªÊÇÓ°ÏìÁË¾ÍÓ°ÏìÁË°É¡£
+
 2024.4.4¸üÐÂ£ºÔö¼ÓÁËSwingÄ£Ê½£¬µ«Õâ²¿·ÖÐÞ¸ÄÈÔ´¦ÓÚSwing·ÖÖ§ÉÏ¡£
 
 ## ×î¸ß×¢ÒâÊÂÏî
@@ -20,16 +101,28 @@ Core/main.cÀïÃæÔø¾­Ìáµ½¹ý£ºÓÉÓÚdelayµÄ¾«¶È²îÇ¿ÈËÒâ£¬±¾ÏîÄ¿²ÉÓÃmpu6050×Ô´øµÄÊ±¼äÖ
 
 Õâ¸öº¯Êý¾ÍÊÇ¸öÐ¡Ð¡µÄ×´Ì¬»ú¡£
 
-±êÊ¶Ä£Ê½µÄºËÐÄ±äÁ¿ÊÇFlag_avoidºÍFlag_follow¡£Èç¹ûFlag_avoid==1¾ÍÊÇ±ÜÕÏÄ£Ê½£¬Èç¹ûFlag_follow==1¾ÍÊÇ¸úËæÄ£Ê½¡£Òò´ËÔÚÕâÀïÎÒ¼ÓÁËÒ»¸öFlag_swing±íÊ¾Ò¡°ÚÄ£Ê½¡£
+±êÊ¶Ä£Ê½µÄºËÐÄ±äÁ¿ÊÇFlag_avoidºÍFlag_follow¡£Èç¹ûFlag_avoid==1¾ÍÊÇ±ÜÕÏÄ£Ê½£¬Èç¹ûFlag_follow==1¾ÍÊÇ¸úËæÄ£Ê½¡£Òò´ËÔÚÕâÀïÎÒ¼ÓÁËÒ»¸öFlag_swing±íÊ¾Ò¡°ÚÄ£Ê½¡£ÎÒ»¹Ôö¼ÓÁËFlag_job±íÊ¾Ö¸Áî¶ÓÁÐÄ£Ê½¡£
 
 ´ËÍâ£¬ÎÒ»¹Ìí¼ÓÁËsin100[]Êý×éºÍsin100_counter¡£Ç°ÕßÊÇÎÒÓÃmatlabµÃµ½µÄ100¸ö²ÉÑùµãµÄsinº¯Êý£¬ºóÕßÊÇÒ»¸öÈ«¾Ö±äÁ¿£¬±êÊ¾Ð¡³µÔÚ´ËÊ±´Ë¿ÌËù´¦µÄÏàÎ»£¨²î²»¶àÕâ¸öÒâË¼£©¡£¸ù¾ÝÏàÎ»¿ÉÒÔµÃµ½´ËÊ±Ð¡³µÓ¦ÓÐµÄÄ¿±êËÙ¶È¡£Ö»ÒªËÙ¶ÈÊÇÈý½Çº¯Êý£¬Î»ÒÆÒ²½«ÊÇÈý½Çº¯Êý£¬½è´ËÊµÏÖÐ¡³µµÄÒ¡°Ú¡£
+
+ÔÚ×îÐÂµÄ¸üÐÂÖÐ£¬JobÄ£Ê½µÄÖ÷Òª´úÂëÂß¼­Ò²ºÍSwingÄ£Ê½µÄ´úÂë´¦ÓÚ´ó¸ÅÒ»ÖÂµÄµØ·½£¬¿ÉÒÔ·Ç³£ÈÝÒ×µÄ·¢ÏÖ¡£
 
 ### WHEELTEC/show.c
 
 ÕâÊÇÓÃÓÚÉè¼ÆOLEDÆÁÄ»µÄÎÄ¼þ¡£
 
-ÎÒÐÞ¸ÄÁËÀïÃæµÄ²¿·ÖÄÚÈÝÒÔÔÚOLEDÉÏÏÔÊ¾sin100[]µ±Ç°µÄÊýÖµ¡£
+ÎÒÐÞ¸ÄÁËÀïÃæµÄ²¿·ÖÄÚÈÝÒÔÔÚOLEDÉÏÏÔÊ¾sinºÍPointerµ±Ç°µÄÊýÖµ¡£
+
+ÒÑ¾­ÐÞÕýÁËÆÕÍ¨Ä£Ê½ÏÂAngleÒ²»á±»Ìæ»»³ÉsinµÄÎÊÌâ¡£
 
 ### Core/Inc/main.h
 
-ÎÒÔÚÀïÃæÌí¼ÓÁËÏà¹ØµÄ±äÁ¿ÉùÃ÷ÒÔÁîÉÏÊöÐÐÎªÉúÐ§¡£
+ÎÒÔÚÀïÃæÌí¼ÓÁËÏà¹ØµÄ±äÁ¿ÉùÃ÷ÒÔÁîÏà¹ØÐÐÎªÉúÐ§¡£
+
+### BSPcode/usart3.c
+
+ÕâÀï°üÀ¨ÁËÀ¶ÑÀÒ£¿ØµÄÊý¾Ý½ÓÊÕºÍ½â¶ÁÂß¼­¡£ÔÚÀïÃæËÑË÷job_pointer¾Í¿ÉÒÔÕÒµ½·¢ÉúÁËÐÞ¸ÄµÄµØ·½¡£
+
+×Ô¶¨Òå°´¼üµÄ±¾ÖÊ¾ÍÊÇabcdefghijkµÈ×ÖÄ¸£¬ÕâÀïÊÇ¸ù¾ÝÊÕµ½µÄ×ÖÄ¸asciiÖµÖ´ÐÐ¶ÔÓ¦µÄÂß¼­¡£
+
+°´¼üÊµÏÖµÄÇå¿ÕÖ¸Áî¶ÓÁÐºÍÌí¼ÓÐÐ¶¯µÈÂß¼­¶¼ÔÚÕâÀïÊµÏÖ¡£
